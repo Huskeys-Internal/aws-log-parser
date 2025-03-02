@@ -16,6 +16,7 @@ from .models import (
     LogFormatType,
 )
 from .util import batcher
+from .cache import cached
 
 from .parser import to_python
 
@@ -33,6 +34,7 @@ class AwsLogParser:
     file_suffix: str = ".log"
     regex_filter: typing.Optional[str] = None
     verbose: bool = False
+    cache_ttl: int = 3600  # Cache TTL in seconds (default: 1 hour)
 
     plugin_paths: typing.List[typing.Union[str, Path]] = field(default_factory=list)
     plugins: typing.List[str] = field(default_factory=list)
@@ -159,7 +161,8 @@ class AwsLogParser:
             )
         )
 
-    def read_url(self, url):
+    @cached()
+    def read_url(self, url, force_refresh=False):
         """
         Yield parsed log entries from the given url. The file:// and s3://
         schemes are currently supported.
@@ -172,6 +175,9 @@ class AwsLogParser:
             or you can pass the full path to the file::
 
                 s3://bucket/prefix/logfile.log
+                
+        :param force_refresh: If True, ignore the cache and fetch fresh data
+        :type force_refresh: bool
 
         :type kind: str
         :raise ValueError: If the url schema is not known.
@@ -182,12 +188,12 @@ class AwsLogParser:
         parsed = urlparse(url)
 
         if parsed.scheme == "file":
-            yield from self.read_files(parsed.path)
+            return list(self.read_files(parsed.path))
 
         elif parsed.scheme == "s3":
-            yield from self.read_s3(
+            return list(self.read_s3(
                 parsed.netloc,
                 parsed.path.lstrip("/"),
-            )
+            ))
         else:
             raise ValueError(f"Unknown scheme {parsed.scheme}")

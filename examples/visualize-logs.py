@@ -26,6 +26,8 @@ LOG_TYPE = LogType.WAF  # Changed to WAF logs
 LIMIT = 10
 FILE_SUFFIX = ".log.gz"  # Updated suffix for WAF logs
 VERBOSE = True  # Set to True to see more details
+CACHE_TTL = int(os.getenv("CACHE_TTL", "3600"))  # Cache TTL in seconds (default: 1 hour)
+FORCE_REFRESH = os.getenv("FORCE_REFRESH", "").lower() in ("true", "1", "yes")  # Force refresh cache
 
 console = Console()
 
@@ -259,7 +261,8 @@ def main():
     console.print(Panel.fit(
         f"[bold blue]AWS Log Visualizer[/bold blue]\n"
         f"Log Type: [green]{LOG_TYPE.name}[/green]\n"
-        f"Source: [yellow]{S3_PATH}[/yellow]"
+        f"Source: [yellow]{S3_PATH}[/yellow]\n"
+        f"Cache: [{'red]Disabled (Force Refresh)' if FORCE_REFRESH else f'green]Enabled (TTL: {CACHE_TTL}s)'}"
     ))
     
     # Create progress display
@@ -277,11 +280,12 @@ def main():
             role_session_name="aws-log-parser-session",
             verbose=VERBOSE,
             file_suffix=FILE_SUFFIX,
+            cache_ttl=CACHE_TTL,
         )
         
         try:
             # Convert generator to list to process multiple times
-            entries = list(log_parser.read_url(S3_PATH))
+            entries = log_parser.read_url(S3_PATH, force_refresh=FORCE_REFRESH)
             progress.update(task, description="[bold green]Logs loaded successfully!")
             
             console.print(f"\n[bold]Analyzed [cyan]{len(entries):,}[/cyan] log entries[/bold]\n")

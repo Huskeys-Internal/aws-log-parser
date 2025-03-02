@@ -104,5 +104,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# AWS Log Parser cache
+.aws_log_parser_cache/
+~/.aws_log_parser_cache/
+
 .vim/
 .sw?
