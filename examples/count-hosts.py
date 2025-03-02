@@ -42,6 +42,13 @@ Examples:
         --log-type LoadBalancer \\
         --file-suffix='.gz' \\
         s3://aws-logs-test-data/test-alb/AWSLogs/111111111111/elasticloadbalancing/us-east-1/2022/
+        
+    # Using role assumption to access logs in another account
+
+    python examples/count-hosts.py \\
+        --log-type CloudFront \\
+        --role-arn arn:aws:iam::123456789012:role/LogReaderRole \\
+        s3://cross-account-logs/cloudfront-logs/
 """
         ),
     )
@@ -77,6 +84,22 @@ Examples:
         "--region",
         help="The aws region to use.",
     )
+    
+    parser.add_argument(
+        "--role-arn",
+        help="ARN of the IAM role to assume for AWS operations.",
+    )
+    
+    parser.add_argument(
+        "--role-session-name",
+        default="aws-log-parser-session",
+        help="Session name to use when assuming the role.",
+    )
+    
+    parser.add_argument(
+        "--external-id",
+        help="External ID to use when assuming the role (if required).",
+    )
 
     parser.add_argument(
         "--verbose",
@@ -92,6 +115,9 @@ Examples:
         log_type=args.log_type,
         profile=args.profile,
         region=args.region,
+        role_arn=args.role_arn,
+        role_session_name=args.role_session_name,
+        external_id=args.external_id,
         verbose=args.verbose,
         file_suffix=args.file_suffix,
         regex_filter=args.regex_filter,

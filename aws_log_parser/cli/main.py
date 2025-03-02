@@ -74,6 +74,22 @@ def main():
         "--region",
         help="The aws region to use.",
     )
+    
+    parser.add_argument(
+        "--role-arn",
+        help="ARN of the IAM role to assume for AWS operations.",
+    )
+    
+    parser.add_argument(
+        "--role-session-name",
+        default="aws-log-parser-session",
+        help="Session name to use when assuming the role.",
+    )
+    
+    parser.add_argument(
+        "--external-id",
+        help="External ID to use when assuming the role (if required).",
+    )
 
     parser.add_argument(
         "--count-hosts",
@@ -90,6 +106,9 @@ def main():
         log_type=args.log_type,
         profile=args.profile,
         region=args.region,
+        role_arn=args.role_arn,
+        role_session_name=args.role_session_name,
+        external_id=args.external_id,
         verbose=args.verbose,
         plugin_paths=[
             Path(__file__).parents[2] / "plugins",

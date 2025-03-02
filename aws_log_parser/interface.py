@@ -27,6 +27,9 @@ class AwsLogParser:
     # Optional
     region: typing.Optional[str] = None
     profile: typing.Optional[str] = None
+    role_arn: typing.Optional[str] = None
+    role_session_name: typing.Optional[str] = None
+    external_id: typing.Optional[str] = None
     file_suffix: str = ".log"
     regex_filter: typing.Optional[str] = None
     verbose: bool = False
@@ -36,7 +39,12 @@ class AwsLogParser:
 
     def __post_init__(self):
         self.aws_client = AwsClient(
-            region=self.region, profile=self.profile, verbose=self.verbose
+            region=self.region, 
+            profile=self.profile, 
+            role_arn=self.role_arn,
+            role_session_name=self.role_session_name,
+            external_id=self.external_id,
+            verbose=self.verbose
         )
 
         self.plugins_loaded = [

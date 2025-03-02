@@ -9,6 +9,42 @@
 Python module to parse AWS LoadBalancer, CloudFront and WAF logs into Python3 data
 classes.
 
+
+## Local Installation of our fork
+clone it, create a virtualenv, install requirements, 
+create a .env file that has the S3_URL set to the log you want to parse and 1_ARN_CLOUDFORMATION set to the desited ARN of the organizations.
+
+```
+git clone https://github.com/Huskeys-Internal/aws-log-parser.git
+```
+
+```
+python3 -m venv aws_log_parser_venv
+source aws_log_parser_venv/bin/activate
+pip install -r requirements.txt
+```
+
+.env
+
+```
+S3_URL='s3://sheker'
+1_ARN_CLOUDFORMATION='arn:aws:cloudformation:sheker-sheker:43243434'
+```
+
+## running one of the examples
+
+```
+python3 examples/visualize-logs.py
+```
+
+## Example Output
+
+![Example WAF Log Visualization](examples/waf-log-visualization.png)
+
+
+
+
+
 ## Install
 
 `pip install aws-log-parser`
