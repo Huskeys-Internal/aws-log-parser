@@ -11,16 +11,19 @@ classes.
 
 
 ## Local Installation of our fork
+
+or, the oldschool way:
 clone it, create a virtualenv, install requirements, 
-create a .env file that has the S3_URL set to the log file/folder (will be recursive) you want to parse and 1_ARN_CLOUDFORMATION set to the desited ARN of the organizations.
+create a .env file that has:
+    `S3_URL` set to the log file/folder (will be recursive) you want to parse
+    `1_ARN_CLOUDFORMATION` set to the desited ARN of the organizations.
 
 
-
-```
+```bash
 git clone https://github.com/Huskeys-Internal/aws-log-parser.git
 ```
 
-```
+```bash
 python3 -m venv aws_log_parser_venv
 source aws_log_parser_venv/bin/activate
 pip install -r requirements/all.txt
@@ -28,16 +31,16 @@ pip install -r requirements/all.txt
 
 .env
 
-```
+```bash
 S3_URL='s3://sheker'
 # note: if you choose a directory, the extension of the log files to search for is important. see `AwsLogParser` `file_suffix` parameter.
 
-1_ARN_CLOUDFORMATION='arn:aws:cloudformation:sheker-sheker:43243434'
+1_ARN_CLOUDFORMATION='arn:aws:cloudformation:sheker-sheker:43243434/sheker'
 ```
 
-## running one of the examples
+## running one of our examples
 
-```
+```bash 
 python3 examples/visualize-logs.py
 ```
 
@@ -45,8 +48,7 @@ python3 examples/visualize-logs.py
 
 ![Example WAF Log Visualization](examples/example_visualize_logs.png)
 
-
-
+or use poerty install?
 
 
 
