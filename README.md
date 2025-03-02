@@ -43,7 +43,7 @@ python3 examples/visualize-logs.py
 
 ## Example Output
 
-![Example WAF Log Visualization](examples/waf-log-visualization.png)
+![Example WAF Log Visualization](examples/example_visualize_logs.png)
 
 
 
